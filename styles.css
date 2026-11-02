@@ -1,0 +1,630 @@
+/* ============================================================
+   Режим — монохромная заготовка сайта
+   ============================================================ */
+
+:root {
+  --bg: #0a0a0a;
+  --bg-soft: #101010;
+  --fg: #f4f4f4;
+  --muted: #8a8a8a;
+  --line: rgba(255, 255, 255, 0.14);
+  --ease: cubic-bezier(0.16, 0.84, 0.28, 1);
+  --pad: clamp(20px, 5vw, 72px);
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #f4f4f4;
+  color: #0a0a0a;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+  font-weight: 400;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* ---------- микро-подписи ---------- */
+.micro {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ============================================================
+   Курсор
+   ============================================================ */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  will-change: transform;
+}
+
+.cursor.is-on {
+  opacity: 0.95;
+}
+
+/* ============================================================
+   Шум / текстура
+   ============================================================ */
+
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ============================================================
+   Индикатор прокрутки
+   ============================================================ */
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: 110;
+  mix-blend-mode: difference;
+}
+
+/* ============================================================
+   Навигация
+   ============================================================ */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  padding: 22px 0;
+  transition: background 0.4s ease, padding 0.4s ease, border-color 0.4s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.nav.is-scrolled {
+  padding: 14px 0;
+  background: rgba(10, 10, 10, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.nav__logo {
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.nav__logo sup {
+  font-size: 8px;
+  margin-left: 3px;
+  vertical-align: super;
+  color: var(--muted);
+}
+
+.nav__links {
+  display: flex;
+  gap: clamp(18px, 3vw, 40px);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: #c9c9c9;
+}
+
+.nav__links a {
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.5s var(--ease);
+}
+
+.nav__links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 140px 0 60px;
+  position: relative;
+}
+
+.hero__title {
+  margin: clamp(24px, 5vh, 56px) 0 clamp(40px, 8vh, 88px);
+  font-size: clamp(56px, 12.5vw, 176px);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  font-weight: 400;
+}
+
+.hero__title span {
+  display: block;
+}
+
+.hero__title span:last-child {
+  padding-left: clamp(0px, 8vw, 140px);
+  color: #d0d0d0;
+}
+
+.hero__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(24px, 6vw, 80px);
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+
+.lead {
+  max-width: 42ch;
+  font-size: clamp(15px, 1.6vw, 18px);
+  line-height: 1.6;
+  color: #b4b4b4;
+}
+
+.scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.scroll-hint i {
+  display: block;
+  width: 1px;
+  height: 46px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+  animation: hint 2.6s var(--ease) infinite;
+  transform-origin: top center;
+}
+
+@keyframes hint {
+  0%   { transform: scaleY(0); opacity: 0; }
+  30%  { opacity: 1; }
+  70%  { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+/* ============================================================
+   Секции
+   ============================================================ */
+
+.section {
+  padding: clamp(90px, 14vh, 190px) 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) 1fr;
+  gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+}
+
+.h2 {
+  font-size: clamp(30px, 4.4vw, 60px);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  margin-bottom: clamp(28px, 4vw, 56px);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 48px);
+  max-width: 760px;
+}
+
+.cols p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #9d9d9d;
+}
+
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 22px;
+  margin-bottom: clamp(36px, 5vw, 64px);
+}
+
+.section__head .h2 {
+  margin: 0;
+}
+
+/* ---------- бегущая строка ---------- */
+
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: clamp(16px, 2.4vw, 30px) 0;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+
+.marquee__track span {
+  white-space: nowrap;
+  padding-right: clamp(30px, 4vw, 60px);
+  font-size: clamp(22px, 3.6vw, 52px);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* ---------- открытые роли ---------- */
+
+.roles {
+  border-top: 1px solid var(--line);
+}
+
+.role {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) minmax(150px, 230px) 32px;
+  grid-template-areas: "num main meta arrow";
+  align-items: center;
+  gap: clamp(12px, 3vw, 40px);
+  padding: clamp(20px, 2.6vw, 30px) 0;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.5s var(--ease), padding 0.5s var(--ease);
+}
+
+.role:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.role__num {
+  grid-area: num;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.role__main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.role__title {
+  font-size: clamp(18px, 2.2vw, 26px);
+  letter-spacing: -0.01em;
+  transition: color 0.5s var(--ease);
+}
+
+.role__desc {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #8f8f8f;
+}
+
+.role__meta {
+  grid-area: meta;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.8;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+}
+
+.role__arrow {
+  grid-area: arrow;
+  justify-self: end;
+  font-size: 18px;
+  line-height: 1;
+  color: #6f6f6f;
+  transition: transform 0.5s var(--ease), color 0.5s var(--ease);
+}
+
+.role:hover .role__arrow {
+  transform: translate(4px, -4px);
+  color: #fff;
+}
+
+.role:hover .role__title {
+  color: #fff;
+}
+
+.roles__note {
+  margin-top: clamp(24px, 3vw, 36px);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.roles__note a {
+  color: #e8e8e8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  transition: border-color 0.4s ease;
+}
+
+.roles__note a:hover {
+  border-bottom-color: #fff;
+}
+
+/* ---------- манифест ---------- */
+
+.section--statement {
+  padding-top: clamp(70px, 10vh, 140px);
+  padding-bottom: clamp(70px, 10vh, 140px);
+  border-top: 1px solid var(--line);
+}
+
+.statement {
+  margin-top: clamp(28px, 5vh, 56px);
+  font-size: clamp(40px, 9.5vw, 132px);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+
+.statement span {
+  display: block;
+}
+
+.statement .dim {
+  color: #4d4d4d;
+  padding-left: clamp(0px, 10vw, 180px);
+}
+
+.statement span:last-child {
+  color: #c9c9c9;
+  padding-left: clamp(0px, 3vw, 60px);
+}
+
+/* ---------- контакт ---------- */
+
+.section--contact {
+  border-top: 1px solid var(--line);
+}
+
+.mail {
+  display: inline-block;
+  font-size: clamp(22px, 4.4vw, 56px);
+  letter-spacing: -0.02em;
+  padding-bottom: 6px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.4s ease, border-color 0.4s ease;
+}
+
+.mail:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* ============================================================
+   Футер
+   ============================================================ */
+
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0;
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.footer__links {
+  display: flex;
+  gap: clamp(16px, 3vw, 32px);
+  font-size: 13px;
+  color: #b0b0b0;
+}
+
+.footer__links a {
+  transition: color 0.3s ease;
+}
+
+.footer__links a:hover {
+  color: #fff;
+}
+
+/* ============================================================
+   Появление при прокрутке
+   ============================================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(56px);
+  transition:
+    opacity 2.4s var(--ease),
+    transform 2.4s var(--ease);
+  transition-delay: var(--d, 0s);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   Адаптив
+   ============================================================ */
+
+@media (max-width: 860px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .cols {
+    grid-template-columns: 1fr;
+  }
+
+  .role {
+    grid-template-columns: 32px minmax(0, 1fr) 24px;
+    grid-template-areas:
+      "num main arrow"
+      ". meta meta";
+    align-items: start;
+    gap: 12px 14px;
+  }
+
+  .role__meta {
+    text-align: left;
+    margin-top: 4px;
+  }
+
+  .hero__foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .scroll-hint i {
+    height: 32px;
+  }
+}
+
+@media (max-width: 560px) {
+  .nav__links {
+    gap: 16px;
+    font-size: 12px;
+  }
+
+  .hero {
+    padding-top: 120px;
+  }
+
+  .statement .dim,
+  .statement span:last-child {
+    padding-left: 0;
+  }
+}
+
+/* ============================================================
+   Уважение к prefers-reduced-motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .marquee__track,
+  .scroll-hint i {
+    animation: none;
+  }
+
+  .role,
+  .role__arrow,
+  .role__title {
+    transition: none;
+  }
+}
